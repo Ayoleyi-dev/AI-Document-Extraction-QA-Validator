@@ -179,6 +179,8 @@ def summarize(report: list[dict[str, Any]], total_records: int) -> dict[str, Any
 
 
 def save_csv(report: list[dict[str, Any]], path: str | Path) -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = [
         "record_index",
         "invoice_id",
@@ -188,14 +190,16 @@ def save_csv(report: list[dict[str, Any]], path: str | Path) -> None:
         "path",
         "message",
     ]
-    with Path(path).open("w", newline="", encoding="utf-8") as handle:
+    with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(report)
 
 
 def save_json(data: dict[str, Any], path: str | Path) -> None:
-    with Path(path).open("w", encoding="utf-8") as handle:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as handle:
         json.dump(data, handle, indent=2)
 
 
