@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from validator import summarize, validate_batch
+from validator import save_csv, save_json, summarize, validate_batch
 
 SCHEMA = json.loads(Path("invoice_schema.json").read_text(encoding="utf-8"))
 
@@ -81,3 +81,35 @@ def test_summary_counts_records_not_issue_rows():
 def test_input_must_be_array():
     with pytest.raises(ValueError):
         validate_batch({"invoice_id": "INV-1"}, SCHEMA)
+
+
+def test_whitespace_only_required_text_is_rejected():
+    invoice = valid_invoice()
+    invoice["client_name"] = "   "
+    report = validate_batch([invoice], SCHEMA)
+    assert any(
+        row["rule"] == "schema" and row["path"] == "$.client_name"
+        for row in report
+    )
+
+
+def test_output_helpers_create_parent_directories(tmp_path):
+    report_path = tmp_path / "reports" / "validation.csv"
+    summary_path = tmp_path / "reports" / "summary.json"
+
+    save_csv(
+        [{
+            "record_index": 1,
+            "invoice_id": "INV-1",
+            "status": "VALID",
+            "severity": "INFO",
+            "rule": "passed_all_checks",
+            "path": "$",
+            "message": "Passed schema and business-rule validation.",
+        }],
+        report_path,
+    )
+    save_json({"total_records": 1}, summary_path)
+
+    assert report_path.exists()
+    assert summary_path.exists()
