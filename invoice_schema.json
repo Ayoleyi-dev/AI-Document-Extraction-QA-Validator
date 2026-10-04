@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Extracted Invoice",
+  "type": "object",
+  "required": [
+    "invoice_id",
+    "date",
+    "client_name",
+    "line_items",
+    "invoice_total"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "invoice_id": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "client_name": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "line_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "item",
+          "quantity",
+          "unit_price",
+          "line_total"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "item": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "quantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "unit_price": {
+            "type": "number",
+            "minimum": 0
+          },
+          "line_total": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "invoice_total": {
+      "type": "number",
+      "minimum": 0
+    }
+  }
+}
