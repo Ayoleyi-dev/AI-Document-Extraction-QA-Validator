@@ -63,7 +63,7 @@ Running the validator creates:
 
 ### `validation_report.csv`
 
-A detailed row-level QA report containing:
+A detailed issue-level QA report containing:
 
 - record number;
 - invoice ID;
@@ -138,6 +138,6 @@ The main point of the project is not AI model training. It focuses on the **qual
 
 An extraction system can return syntactically valid JSON and still produce unusable business data. This project separates schema checks from reconciliation rules so those errors can be found before the data is accepted into a downstream workflow.
 
-## Possible extensions
+## If I continue the project
 
-A larger version could add batch folder processing, configurable rule sets for different document types, or a review dashboard for QA teams.
+The next useful step would be batch folder processing so several extracted documents can be checked in one run. After that, I could add separate rule sets for other document types such as receipts or purchase orders.
